@@ -20,5 +20,6 @@ $app->get('/', ['middleware' => 'auth', function () use ($app) {
 
 //Home
 $app->post('/message/history', ['middleware' => 'auth', 'uses' => 'HomeController@getHistoryMessage']);
+$app->post('/message/last', ['middleware' => 'auth', 'uses' => 'HomeController@getLastMessage']);
 
 
