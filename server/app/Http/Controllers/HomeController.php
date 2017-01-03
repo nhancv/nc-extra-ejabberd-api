@@ -24,6 +24,11 @@ class HomeController extends Controller
     {
     }
 
+    public function notification(Request $request)
+    {
+        return $this->returnResponse();
+    }
+
     public function getHistoryMessage(Request $request)
     {
         $this->validate($request, [
