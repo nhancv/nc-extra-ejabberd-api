@@ -28,23 +28,29 @@ class HomeController extends Controller
 
     public function notification(Request $request)
     {
-        //@nhancv TODO: send mail
-        ob_start();
+        try {
+            //@nhancv TODO: send mail
+            ob_start();
+            HeaderResponse::closeHeader();
 
-        HeaderResponse::closeHeader();
+            $this->response['code'] = OK;
+            echo json_encode($this->response);
+            header('Connection: close');
+            header('Content-Length: ' . ob_get_length());
+            ob_end_flush();
+            ob_flush();
+            flush();
 
-        $this->response['code'] = OK;
-        echo json_encode($this->response);
-        header('Connection: close');
-        header('Content-Length: ' . ob_get_length());
-        ob_end_flush();
-        flush();
-
-        $html_body = '<p>_From: ' . $request->input('From')
-            . '<br>_To: ' . $request->input('To')
-            . '<br>_Body: ' . $request->input('Body')
-            . '</p>_XML: <textarea>' . $request->input('XML').'</textarea>';
-        Util::sendEmail('caovannhan2002@gmail.com', 'Test xmpp notification', $html_body);
+            $html_body = '<p>_From: ' . $request->input('From')
+                . '<br>_To: ' . $request->input('To')
+                . '<br>_Body: ' . $request->input('Body')
+                . '</p>_XML: <textarea>' . $request->input('XML') . '</textarea>';
+            Util::sendEmail('caovannhan2002@gmail.com', 'Test xmpp notification', $html_body);
+        } catch (Exception $e) {
+            $this->response['code'] = ERROR;
+            $this->response['data'] = $e->getMessage();
+        }
+        return $this->returnResponse();
     }
 
     public function getHistoryMessage(Request $request)
