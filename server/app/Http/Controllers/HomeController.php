@@ -9,6 +9,8 @@
 namespace App\Http\Controllers;
 
 use App\Libs\AuthToken;
+use App\Libs\HeaderResponse;
+use App\Libs\Util;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +28,23 @@ class HomeController extends Controller
 
     public function notification(Request $request)
     {
-        return $this->returnResponse();
+        //@nhancv TODO: send mail
+        ob_start();
+
+        HeaderResponse::closeHeader();
+
+        $this->response['code'] = OK;
+        echo json_encode($this->response);
+        header('Connection: close');
+        header('Content-Length: ' . ob_get_length());
+        ob_end_flush();
+        flush();
+
+        $html_body = '<p>_From: ' . $request->input('From')
+            . '<br>_To: ' . $request->input('To')
+            . '<br>_Body: ' . $request->input('Body')
+            . '</p>_XML: <textarea>' . $request->input('XML').'</textarea>';
+        Util::sendEmail('caovannhan2002@gmail.com', 'Test xmpp notification', $html_body);
     }
 
     public function getHistoryMessage(Request $request)
